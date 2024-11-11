@@ -1,0 +1,138 @@
+name: Standard Repo Workflow  
+
+on: [push]
+
+permissions:
+    contents: write
+
+env:
+    TOPIC: electronics
+    DESCRIPTION: <Project Description>
+jobs:
+    repo:
+        name: Update Repository Details
+        runs-on: ubuntu-latest
+        steps:
+          - name: Update Repository Information
+            runs: |
+                gh repo edit $REPO \
+                --visibility public \
+                --add-topic $TOPIC \
+                --description $DESCRIPTION \
+                --homepage https://Matt-Santos.github.io/$REPO_NAME/ \
+                --enable-wiki=false \
+                --enable-discussions=false \
+                --enable-issues=false \
+                --enable-projects=false \
+                --accept-visibility-change-consequences
+            env:
+                GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                REPO: ${{ github.repository }}
+                REPO_NAME: ${{ github.event.repository.name }}
+    # kicad:
+        # name: KiCAD Actions
+        # runs-on: ubuntu-latest
+        # steps:
+          # - name: Checkout
+            # uses: actions/checkout@v4
+          # - name: KiBot GitHub action
+            # uses: INTI-CMNB/KiBot@v1.8.2
+            # with:
+                # config:
+                # dir:
+    # docs:
+        # name: Compile Latex Documents
+        # runs-on: ubuntu-latest
+        # steps:
+          # - name: Compile Latex documents
+            # uses: xu-cheng/latex-action@v3
+            # with:
+                # root_file: |
+                    # documents/*.tex
+                    # documents/*/*.tex
+                # work_in_root_file_dir: true
+                # continue_on_error: true
+                # latexmk_shell_escape: true
+                # latexmk_use_lualatex: true
+          # - name: Rename PDFs According to JobName
+            # run: |
+                # find . -type f -iname "*.pdf" | while read fname; do
+                    # dirname=`dirname $fname`
+                    # filename=`basename $fname`
+                    # texname=`echo $filename | sed 's/pdf/tex/'`
+                    # newname=`head -n 1 $dirname/$texname`
+                    # newname="${newname##*=}.pdf"
+                    # mv "${dirname}/$filename" "${dirname}/${newname}"
+                # done
+          # - name: Digitally Sign PDF Documents
+            # run: |
+                # find . -type f -iname "*.pdf" | while read fname; do
+                    # dirname=`dirname $fname`
+                    # filename=`basename $fname`
+                    # gpg --pinentry-mode loopback --passphrase ${{ secrets.PASSPHRASE }} --clearsign --not-dash-escaped "${dirname}/$filename"
+                    # mv "${dirname}/$filename".asc "${dirname}/$filename"
+                    # gpg --pinentry-mode loopback --passphrase ${{ secrets.PASSPHRASE }} --detach-sig "${dirname}/$filename"
+                # done
+    build-site:
+        name: Build Jekyll Website
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+          - name: Setup Ruby
+            uses: ruby/setup-ruby@v1
+            with:
+              ruby-version: '3.3'
+              bundler-cache: true
+              cache-version: 0
+          - name: Setup Pages
+            id: pages
+            uses: actions/configure-pages@v5
+          - name: Build with Jekyll
+            run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+            env:
+              JEKYLL_ENV: production
+          - name: Upload artifact
+            uses: actions/upload-pages-artifact@v3
+    deploy-site:
+        name: Deploy Jekyll Website
+        needs: build-site
+        environment:
+          name: github-pages
+          url: ${{ steps.deployment.outputs.page_url }}
+        runs-on: ubuntu-latest
+        steps:
+          - name: Deploy to GitHub Pages
+            id: deployment
+            uses: actions/deploy-pages@v4
+        
+        
+    # create-release: # Zip of essentials
+        # name: Create Release
+        # runs-on: ubuntu-latest
+        # steps:
+        # - name: Create the zip
+            # run: |
+                # zip... > name.zip
+        # - name: Delete Previous Release
+            # run: gh release delete latest --cleanup-tag
+            # env:
+                # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # - name: Create Latest Release (always)
+            # uses: softprops/action-gh-release@v2.0.9
+            # with:
+                # files: |
+                    # <name>.zip
+                # name: Latest
+                # tag_name: latest
+                # make_latest: true
+                # body: Project Documents
+          # - name: Create Tagged Release (if push is tagged)
+            # if: startsWith(github.ref, 'refs/tags/')
+            # uses: softprops/action-gh-release@v2.0.9
+            # with:
+                # files: |
+                    # <name>.zip
+                # generate_release_notes: true
+                # make_latest: true
+                # body: Project Documents
