@@ -1,0 +1,12 @@
+main:
+  - title: "Quick-Start"
+    url: /quick-start/
+  - title: "Documents"
+    url: /docs/
+  - title: "Gallery"
+    url: /gallery/
+  - title: "Release"
+    url: /release/
+  - title: "Source"
+    url: https://github.com/{{ site.repository }}
+    target: _blank

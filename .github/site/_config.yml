@@ -1,20 +1,35 @@
 # _config.yml
 
-title: "Matthew Santos"
-description: "Personal Website/Portfolio"
-repository: "Matt-Santos/matt-santos.github.io"
+# Site Settings
+title: "Project Template"
+description: "Short Description"
+subtitle: "Version 1.0"
+repository: "Matt-Santos/project-template"
+logo: "/assets/images/88x88.png"
+
+# Repo Settings (Gihub Workflow)
+TOPIC: electronics
+WIKI: false
+ISSUES: false
+DISCUSSIONS: false
+PROJECTS: false
+
+# Theme Settings
+name: "Matthew Santos"
+enable_copy_code_button: true
+remote_theme: "mmistakes/minimal-mistakes@4.26.2"
+minimal_mistakes_skin: "dark"
+title_separator: "|"
+locale: "en-US"
+atom_feed:
+  hide: true
+footer:
+  links:
+    - label: "Contact"
+      icon: "fab fa-fw fa-envelope"
+      url: "https://matt-santos.github.io/#contact"
 
 # Jekyll Build settings
 timezone: America/Toronto
-theme: null #jekyll-theme-minimal
+theme: null
 markdown: GFM
-
-# Varriables
-author:
- name: "Matthew Santos"
- location: "Milton, Ontario"
- email: "mailto:matthewsantos@ieee.org"
- location: "Toronto, Ontario"
- github: "https://github.com/matt-santos"
- linkedin: "https://linkedin.com/in/matthewjsantos"
- orcid: "https://orcid.org/0009-006-1653-3882"

@@ -1,30 +1,26 @@
 name: Standard Repo Workflow  
 
-on: [push]
+on: [push, workflow_dispatch]
 
-permissions:
-    contents: write
+permissions: write-all
 
-env:
-    TOPIC: electronics
-    DESCRIPTION: <Project Description>
 jobs:
     repo:
         name: Update Repository Details
         runs-on: ubuntu-latest
         steps:
+          - name: Checkout
+            uses: actions/checkout@v4
           - name: Update Repository Information
-            runs: |
+            run: |
                 gh repo edit $REPO \
-                --visibility public \
-                --add-topic $TOPIC \
-                --description $DESCRIPTION \
-                --homepage https://Matt-Santos.github.io/$REPO_NAME/ \
-                --enable-wiki=false \
-                --enable-discussions=false \
-                --enable-issues=false \
-                --enable-projects=false \
-                --accept-visibility-change-consequences
+                --homepage="https://Matt-Santos.github.io/$REPO_NAME/" \
+                --enable-wiki="$(cat .github/site/_config.yml | grep WIKI | cut -f2- -d ' ' )" \
+                --enable-discussions="$(cat .github/site/_config.yml | grep DISCUSSIONS | cut -f2- -d ' ' )" \
+                --enable-issues="$(cat .github/site/_config.yml | grep ISSUES | cut -f2- -d ' ' )" \
+                --enable-projects="$(cat .github/site/_config.yml | grep PROJECTS | cut -f2- -d ' ' )" \
+                --add-topic="$(cat .github/site/_config.yml | grep TOPIC | cut -f2- -d ' ' )" \
+                --description="$(cat .github/site/_config.yml | grep description | cut -f2- -d ' ' )"
             env:
                 GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 REPO: ${{ github.repository }}
@@ -40,41 +36,42 @@ jobs:
             # with:
                 # config:
                 # dir:
-    # docs:
-        # name: Compile Latex Documents
-        # runs-on: ubuntu-latest
-        # steps:
-          # - name: Compile Latex documents
-            # uses: xu-cheng/latex-action@v3
-            # with:
-                # root_file: |
-                    # documents/*.tex
-                    # documents/*/*.tex
-                # work_in_root_file_dir: true
-                # continue_on_error: true
-                # latexmk_shell_escape: true
-                # latexmk_use_lualatex: true
-          # - name: Rename PDFs According to JobName
-            # run: |
-                # find . -type f -iname "*.pdf" | while read fname; do
-                    # dirname=`dirname $fname`
-                    # filename=`basename $fname`
-                    # texname=`echo $filename | sed 's/pdf/tex/'`
-                    # newname=`head -n 1 $dirname/$texname`
-                    # newname="${newname##*=}.pdf"
-                    # mv "${dirname}/$filename" "${dirname}/${newname}"
-                # done
-          # - name: Digitally Sign PDF Documents
-            # run: |
-                # find . -type f -iname "*.pdf" | while read fname; do
-                    # dirname=`dirname $fname`
-                    # filename=`basename $fname`
-                    # gpg --pinentry-mode loopback --passphrase ${{ secrets.PASSPHRASE }} --clearsign --not-dash-escaped "${dirname}/$filename"
-                    # mv "${dirname}/$filename".asc "${dirname}/$filename"
-                    # gpg --pinentry-mode loopback --passphrase ${{ secrets.PASSPHRASE }} --detach-sig "${dirname}/$filename"
-                # done
+    docs:
+        name: Compile Latex Documents
+        runs-on: ubuntu-latest
+        steps:
+          - name: Compile Latex documents
+            uses: xu-cheng/latex-action@v3
+            with:
+                root_file: |
+                    documents/*.tex
+                    documents/*/*.tex
+                work_in_root_file_dir: true
+                continue_on_error: true
+                latexmk_shell_escape: true
+                latexmk_use_lualatex: true
+          - name: Rename PDFs According to JobName
+            run: |
+                find . -type f -iname "*.pdf" | while read fname; do
+                    dirname=`dirname $fname`
+                    filename=`basename $fname`
+                    texname=`echo $filename | sed 's/pdf/tex/'`
+                    newname=`head -n 1 $dirname/$texname`
+                    newname="${newname##*=}.pdf"
+                    mv "${dirname}/$filename" "${dirname}/${newname}"
+                done
+          - name: Digitally Sign PDF Documents
+            run: |
+                find . -type f -iname "*.pdf" | while read fname; do
+                    dirname=`dirname $fname`
+                    filename=`basename $fname`
+                    gpg --pinentry-mode loopback --passphrase ${{ secrets.PASSPHRASE }} --clearsign --not-dash-escaped "${dirname}/$filename"
+                    mv "${dirname}/$filename".asc "${dirname}/$filename"
+                    gpg --pinentry-mode loopback --passphrase ${{ secrets.PASSPHRASE }} --detach-sig "${dirname}/$filename"
+                done
     build-site:
         name: Build Jekyll Website
+        needs: docs
         runs-on: ubuntu-latest
         steps:
           - name: Checkout
@@ -85,15 +82,23 @@ jobs:
               ruby-version: '3.3'
               bundler-cache: true
               cache-version: 0
+              working-directory: .github/site
           - name: Setup Pages
             id: pages
             uses: actions/configure-pages@v5
+            # with:
+                # enablement: true
           - name: Build with Jekyll
-            run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+            run: |
+                cd .github/site
+                bundle exec jekyll build \
+                --baseurl "${{ steps.pages.outputs.base_path }}"
             env:
               JEKYLL_ENV: production
           - name: Upload artifact
             uses: actions/upload-pages-artifact@v3
+            with:
+                path: .github/site/_site
     deploy-site:
         name: Deploy Jekyll Website
         needs: build-site
@@ -105,8 +110,6 @@ jobs:
           - name: Deploy to GitHub Pages
             id: deployment
             uses: actions/deploy-pages@v4
-        
-        
     # create-release: # Zip of essentials
         # name: Create Release
         # runs-on: ubuntu-latest
