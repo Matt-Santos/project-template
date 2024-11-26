@@ -1,0 +1,14 @@
+---
+title: "Gallery"
+layout: splash
+---
+
+{% for img in site.static_files %}
+	{% if img.path contains 'documents/images/gallery' %}
+		<figure>
+		  <a href="{{ img.path | relative_url }}" class="image-popup">
+			<img src="{{ img.path | relative_url }}">
+		  </a>
+		</figure>
+	{% endif %}
+{% endfor %}

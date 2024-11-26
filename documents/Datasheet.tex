@@ -1,0 +1,50 @@
+\documentclass{datasheet}
+
+% Custom Settings
+\makeatletter
+\renewcommand\tableofcontents{%
+	\section*{\makebox[\linewidth][c]{\contentsname}%
+		\@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+	\begin{multicols}{2}%
+		\@starttoc{toc}%
+	\end{multicols}
+}
+\makeatother
+
+\begin{document}
+{\hfill Keywords}
+
+\section{GENERAL DESCRIPTION}
+\markdownInput{README.md} % Description and Feature List
+
+\section{APPLICATIONS}
+\begin{itemize}
+	\item Automotive
+	\item Industrial
+\end{itemize}
+
+\section{FUNCTIONAL BLOCK DIAGRAM}
+%\includegraphics{temp.jpg}
+
+% Product Highlights
+
+\pagebreak
+\tableofcontents
+% Revision History
+% Author Contact Details
+\pagebreak
+
+\section{Pin Configuration}
+
+\section{Specifications}
+\subsection{Electrical Characteristics}
+\subsection{Peripherals}
+
+
+\section{Detailed Description}
+
+\section{Application Example}
+
+\section{Mechanical Drawings}
+
+\end{document}

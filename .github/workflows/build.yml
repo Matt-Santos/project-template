@@ -5,37 +5,6 @@ on: [push, workflow_dispatch]
 permissions: write-all
 
 jobs:
-    repo:
-        name: Update Repository Details
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v4
-          - name: Update Repository Information
-            run: |
-                gh repo edit $REPO \
-                --homepage="https://Matt-Santos.github.io/$REPO_NAME/" \
-                --enable-wiki="$(cat .github/site/_config.yml | grep WIKI | cut -f2- -d ' ' )" \
-                --enable-discussions="$(cat .github/site/_config.yml | grep DISCUSSIONS | cut -f2- -d ' ' )" \
-                --enable-issues="$(cat .github/site/_config.yml | grep ISSUES | cut -f2- -d ' ' )" \
-                --enable-projects="$(cat .github/site/_config.yml | grep PROJECTS | cut -f2- -d ' ' )" \
-                --add-topic="$(cat .github/site/_config.yml | grep TOPIC | cut -f2- -d ' ' )" \
-                --description="$(cat .github/site/_config.yml | grep description | cut -f2- -d ' ' )"
-            env:
-                GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                REPO: ${{ github.repository }}
-                REPO_NAME: ${{ github.event.repository.name }}
-    # kicad:
-        # name: KiCAD Actions
-        # runs-on: ubuntu-latest
-        # steps:
-          # - name: Checkout
-            # uses: actions/checkout@v4
-          # - name: KiBot GitHub action
-            # uses: INTI-CMNB/KiBot@v1.8.2
-            # with:
-                # config:
-                # dir:
     docs:
         name: Compile Latex Documents
         runs-on: ubuntu-latest
@@ -86,8 +55,10 @@ jobs:
           - name: Setup Pages
             id: pages
             uses: actions/configure-pages@v5
-            # with:
-                # enablement: true
+          - name: Move Assets to Build Directory
+            run: |
+                mkdir -p .github/site/assets
+                mv --target-directory .github/site/assets/ documents hardware firmware
           - name: Build with Jekyll
             run: |
                 cd .github/site

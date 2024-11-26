@@ -1,12 +1,16 @@
 main:
   - title: "Quick-Start"
-    url: /quick-start/
+    url: /quick-start
   - title: "Documents"
-    url: /docs/
+    url: /docs
   - title: "Gallery"
-    url: /gallery/
-  - title: "Release"
-    url: /release/
-  - title: "Source"
-    url: https://github.com/{{ site.repository }}
+    url: /gallery
+  - title: "Files"
+    url: /files
+  - title: "Other"
+    url: "https://matt-santos.github.io/projects"
     target: _blank
+
+#docs:
+#  - title:
+#    url: 

@@ -3,20 +3,13 @@
 # Site Settings
 title: "Project Template"
 description: "Short Description"
-subtitle: "Version 1.0"
+#subtitle: "Version 1.0"
 repository: "Matt-Santos/project-template"
-logo: "/assets/images/88x88.png"
-
-# Repo Settings (Gihub Workflow)
-TOPIC: electronics
-WIKI: false
-ISSUES: false
-DISCUSSIONS: false
-PROJECTS: false
 
 # Theme Settings
 name: "Matthew Santos"
 enable_copy_code_button: true
+logo: "/assets/documents/images/logo.png"
 remote_theme: "mmistakes/minimal-mistakes@4.26.2"
 minimal_mistakes_skin: "dark"
 title_separator: "|"
@@ -26,7 +19,6 @@ atom_feed:
 footer:
   links:
     - label: "Contact"
-      icon: "fab fa-fw fa-envelope"
       url: "https://matt-santos.github.io/#contact"
 
 # Jekyll Build settings
