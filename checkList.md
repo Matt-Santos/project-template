@@ -6,15 +6,15 @@
 	- [ ] Add a singular topic
 	- [ ] Add short description and homepage link
 - [ ] Populate Project Data
-	- [ ] Update documents/README.md (1-3 paragraph description)
+	- [ ] Update documents/README.md
 	- [ ] Update .github/site/_config.yml
-	- [ ] Create project image > documents/images/project.png
+	- [ ] Create image of project > documents/images/project.png
 	- [ ] Create project logo > documents/images/logo.png
 	- [ ] Add images to the gallery > documents/images/gallery/
 - [ ] Write/Add Documentation
 	- [ ] documents/docs.md
 	- [ ] documents/quick-start.md
-	- [ ] documents/specifications.tex (pulls from some of these .md (including readme)
+	- [ ] documents/specifications.tex
 - [ ] Add Hardware files
 	- [ ] KiCAD project hardware/DeviceName/DeviceName.pro
 		- [ ] Run Script to Populate BOM/HTMLBOM/Plots/Renders/Gerbers/etc

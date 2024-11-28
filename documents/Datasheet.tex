@@ -1,22 +1,10 @@
+
+
 \documentclass{datasheet}
-
-% Custom Settings
-\makeatletter
-\renewcommand\tableofcontents{%
-	\section*{\makebox[\linewidth][c]{\contentsname}%
-		\@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
-	\begin{multicols}{2}%
-		\@starttoc{toc}%
-	\end{multicols}
-}
-\makeatother
-
 \begin{document}
-{\hfill Keywords}
 
 \section{GENERAL DESCRIPTION}
 \markdownInput{README.md} % Description and Feature List
-
 \section{APPLICATIONS}
 \begin{itemize}
 	\item Automotive
@@ -24,7 +12,7 @@
 \end{itemize}
 
 \section{FUNCTIONAL BLOCK DIAGRAM}
-%\includegraphics{temp.jpg}
+\includegraphics[width=0.45\linewidth,draft]{block_diagram.jpg}
 
 % Product Highlights
 
@@ -34,11 +22,17 @@
 % Author Contact Details
 \pagebreak
 
+\markdownInput{quick-start.md} % Description and Feature List
+\markdownInput{docs.md} % Description and Feature List
+
+
 \section{Pin Configuration}
 
 \section{Specifications}
 \subsection{Electrical Characteristics}
 \subsection{Peripherals}
+
+
 
 
 \section{Detailed Description}

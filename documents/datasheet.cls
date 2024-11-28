@@ -9,19 +9,19 @@
 
 % Packages
 \LoadClass[11pt]{article} % [10pt,12pt]
-\RequirePackage[letterpaper,margin=1in]{geometry} % Canada/USA
+\RequirePackage[includeheadfoot,letterpaper,margin=0.7in,top=0.5in]{geometry} % Canada/USA
 \RequirePackage[english]{babel} % Language Typography
 \RequirePackage[hidelinks]{hyperref}
 \RequirePackage[raggedright]{titlesec}
-\usepackage{fancyhdr}
+\RequirePackage{fancyhdr}
 \RequirePackage{enumitem}
-\usepackage{xcolor}
+\RequirePackage{xcolor}
 \RequirePackage{fontawesome}
 \RequirePackage{graphicx}
-\usepackage{fontspec}
-\usepackage{multicol}
-\usepackage[smartEllipses]{markdown}
-\usepackage{lastpage}
+\RequirePackage{fontspec}
+\RequirePackage{multicol}
+\RequirePackage[smartEllipses]{markdown}
+\RequirePackage{lastpage}
 
 % Set Font (Arial Narrow)
 \defaultfontfeatures[ARIALN]{
@@ -33,33 +33,27 @@
 \setmainfont{ARIALN}
 \setsansfont{ARIALN}
 
-% Define Regular Header
+% Define Header and Footer
 \pagestyle{fancy}
 \fancypagestyle{firstpage}{%
+	\fancyhead[L]{\includegraphics[height=2cm]{images/logo.png}}
 	\fancyhead[C]{}
-	\fancyhead[R]{Data Sheet\\ \LARGE\color{blue}\textbf{PROJECT NAME}}
-	%\fancyhead[L]{\includegraphics{images/project.png}}
-	
-	\fancyfoot[L]{From: K. Grant}
-	\fancyfoot[C]{To: Dean A. Smith}
+	\fancyhead[R]{{\large\color{gray}Data Sheet}\\ \huge\color{blue}\textbf{PROJECT NAME}}
+	\fancyfoot[L]{\today}
+	\fancyfoot[C]{}
 	\fancyfoot[R]{\thepage~of~\pageref{LastPage}}
 }
-
 \fancypagestyle{subsequentpages}{%
 	\fancyhead[C]{}
-	%\fancyhead[R]{\Large\MakeUppercase\bfseries\color{blue}\uppercase{Project Name}}
-	\fancyhead[L]{Data Sheet}
+	\fancyhead[R]{\huge\color{blue}\textbf{PROJECT NAME}}
+	\fancyhead[L]{{\large\color{gray}Data Sheet}}
 	
-	\fancyfoot[L]{From: K. Grant}
-	\fancyfoot[C]{To: Dean A. Smith}
+	\fancyfoot[L]{\today}
+	\fancyfoot[C]{}
 	\fancyfoot[R]{\thepage~of~\pageref{LastPage}}
 }
-\AtBeginDocument{\thispagestyle{firstpage}} % Use the first page headers/footers style on the first page
+\AtBeginDocument{\thispagestyle{firstpage}\vspace*{\baselineskip}} % Use the first page headers/footers style on the first page
 \pagestyle{subsequentpages} % Use the subsequent pages headers/footers style on subsequent pages
-
-
-
-% Define Footer
 
 % Section Header Formats
 \titleformat{\section}{\Large\color{blue}}{}{0em}{}
