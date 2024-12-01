@@ -10,6 +10,7 @@
 	- [ ] Update .github/site/_config.yml
 	- [ ] Create image of project > documents/images/project.png
 	- [ ] Create project logo > documents/images/logo.png
+	- [ ] Create project banner > documents/images/banner.png
 	- [ ] Add images to the gallery > documents/images/gallery/
 - [ ] Write/Add Documentation
 	- [ ] documents/docs.md

@@ -38,49 +38,6 @@ jobs:
                     mv "${dirname}/$filename".asc "${dirname}/$filename"
                     gpg --pinentry-mode loopback --passphrase ${{ secrets.PASSPHRASE }} --detach-sig "${dirname}/$filename"
                 done
-    build-site:
-        name: Build Jekyll Website
-        needs: docs
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v4
-          - name: Setup Ruby
-            uses: ruby/setup-ruby@v1
-            with:
-              ruby-version: '3.3'
-              bundler-cache: true
-              cache-version: 0
-              working-directory: .github/site
-          - name: Setup Pages
-            id: pages
-            uses: actions/configure-pages@v5
-          - name: Move Assets to Build Directory
-            run: |
-                mkdir -p .github/site/assets
-                mv --target-directory .github/site/assets/ documents hardware firmware
-          - name: Build with Jekyll
-            run: |
-                cd .github/site
-                bundle exec jekyll build \
-                --baseurl "${{ steps.pages.outputs.base_path }}"
-            env:
-              JEKYLL_ENV: production
-          - name: Upload artifact
-            uses: actions/upload-pages-artifact@v3
-            with:
-                path: .github/site/_site
-    deploy-site:
-        name: Deploy Jekyll Website
-        needs: build-site
-        environment:
-          name: github-pages
-          url: ${{ steps.deployment.outputs.page_url }}
-        runs-on: ubuntu-latest
-        steps:
-          - name: Deploy to GitHub Pages
-            id: deployment
-            uses: actions/deploy-pages@v4
     # create-release: # Zip of essentials
         # name: Create Release
         # runs-on: ubuntu-latest
