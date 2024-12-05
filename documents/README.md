@@ -1,6 +1,1 @@
-One to Four Paragraph Project Description
-
-# FEATURES
-- Feature A
-- Feature B
-- Feature C
+This repository template is used to create projects with a standardized structure to allow for batch automated actions and structured releases. Said strucutre is also leveraged on my portfolio website as well as my LaTeX-Workshop to populate project information. Valid project categories include hardware, software, documentation or any combination of these. A checklist is provided outlining how to modify this template accordingly.
