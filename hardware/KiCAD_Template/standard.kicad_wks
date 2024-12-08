@@ -121,7 +121,7 @@
 			(face "Arial Narrow")
 		)
 		(justify top)
-		(maxlen 22.86)
+		(maxlen 20.32)
 		(comment "Layer Name")
 	)
 	(line
@@ -156,7 +156,7 @@
 			(face "Arial Narrow")
 		)
 		(justify top)
-		(maxlen 22.86)
+		(maxlen 20.32)
 		(comment "Issue Date")
 	)
 	(line

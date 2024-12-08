@@ -81,12 +81,15 @@ jobs:
                 config: .github/kibot_config.yaml
                 schema: ${{matrix.project}}.kicad_sch
                 board:  ${{matrix.project}}.kicad_pcb
-                additional_args: "-E WORKSHEET=${{matrix.project}}.kicad_wks"
+                dir: build
+                additional_args: "-v -E WORKSHEET=${{matrix.project}}.kicad_wks"
           - name: Upload Project Artifact
+            if: ${{ always() }}
             uses: actions/upload-artifact@v4.4.3
             with:
                 name: KiCAD_Build_${{strategy.job-index}}-artifact
-                path: ${{matrix.project}}/build
+                path: build
+                overwrite: true
     release:
         if: false
         name: Create Release
