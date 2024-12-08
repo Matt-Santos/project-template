@@ -1,0 +1,176 @@
+kibot:
+  version: 1
+globals:
+    units: 'millimeters'
+    colored_tht_resistors: true # Add color bands to the 3D models of KiCad THT resistors.
+    cache_3d_resistors: true # Cache the generated 3D models of colored resistors
+    default_resistor_tolerance: 10 # When no tolerance is specified we use +/-10%
+    # dir: ../hardware # Design directory
+    out_dir: build # Base output dir, same as command line –out-dir.
+    output: '%f-%i%I%v.%x' # Default pattern for output file names.
+preflight:
+    check_zone_fills: true
+    erc:
+        enabled: true
+        dont_stop: true
+    drc:
+        enabled: true
+        dont_stop: true
+    check_fields:
+      - field: Value
+        regex: '(.|\s)*\S(.|\s)*' # Not Blank
+        severity: "warning"
+      - field: Datasheet
+        regex: '^(?!\s*$|~$).+' # Not Blank or ~
+        severity: "warning"
+      - field: Footprint
+        regex: '(.|\s)*\S(.|\s)*' # Not Blank
+        severity: "warning"
+      - field: Source
+        regex: '(.|\s)*\S(.|\s)*' # Not Blank
+        severity: "warning"
+    update_pcb_characteristics: true
+    draw_fancy_stackup:
+        draw_stackup: true
+        columns: 
+            - drawing
+            - layer
+            - thickness
+            - dielectric
+            - layer_type
+outputs:
+  - name: Datasheets
+    type: download_datasheets
+    options:
+        output: '${VALUE}.pdf'
+        dnf: true
+  - name: SchematicPDFs
+    type: pdf_sch_print
+    options:
+        output: '%f-%i%I%v.%x'
+        color_theme: "KiCAD Default"
+        monochrome: true
+  - name: Boardview
+    type: boardview
+    options:
+        output: '%f-%i%I%v.%x'
+  - name: PCB_PDFs
+    type: pcb_print
+    options:
+        output: '%f-%i%I%v.%x'
+        force_edge_cuts: true
+        #plot_sheet_reference: true
+        #sheet_reference_layout: ...
+        pages:
+          - layers: 'F.Silkscreen'
+          - layers: 'F.Mask'
+          - layers: 'F.Cu'
+          - layers: 'In1.Cu'
+          - layers: 'In2.Cu'
+          - layers: 'B.Cu'
+          - layers: 'B.Mask'
+          - layers: 'B.Silkscreen'
+          - layers: 'user'
+          - layers: 'all'
+  - name: Netlist
+    type: netlist
+    options:
+        output: '%f-%i%I%v.%x'
+        format: 'classic'
+  - name: IBOM
+    type: ibom
+    options:
+        output: '%f-%i%I%v.%x'
+        show_fields: 'Value,Footprint,Source,Critical,DNP'
+        dark_mode: true
+        layer_view: 'F'
+        checkboxes: 'Placed,Sourced'
+        include_nets: true
+        highlight_pin1: true
+        dnp_field: 'DNP'
+  - name: PCB_Gerber
+    type: gerber
+    layers: 'copper,technical,inner,outers'
+    options:
+        output: '%f-%i%I%v.%x'
+        plot_sheet_reference: true
+  - name: Drill_File
+    type: excellon
+    options:
+        output: '%f-%i%I%v.%x'
+        minimal_header: true
+        zeros_format: “SUPPRESS_LEADING”
+  - name: Position_File
+    type: position
+    options:
+        output: '%f-%i%I%v.%x'
+  - name: Step_Model
+    type: step
+    options:
+        output: '%f-%i%I%v.%x'
+  - name: Stencil_3D
+    type: stencil_3d
+    options:
+        output: '%f-%i%I%v.%x'
+        thickness: 0.15 # [mm]
+        create_preview: true
+  - name: PCB_Draw
+    type: pcbdraw
+    options:
+        output: '%f-%i%I%v.%x'
+        format: 'png'
+        show_components: 'none'
+  - name: 3D_Render
+    type: render_3d
+    options:
+    layers:
+        output: '%f-%i%I%v.%x'
+        ray_tracing: true
+        transparent_background: true
+        force_stackup_colors: true
+        auto_crop: true
+  - name: STL_Model
+    type: blender_export
+    options:
+        outputs:
+          - output: '%f-%i%I%v.%x'
+            type: stl
+          - output: '%f-%i%I%v.%x'
+            type: render
+        point_of_view:
+          - view: 'top'
+            rotate_x: 10
+            rotate_y: 10
+          - view: 'bottom'
+            rotate_x: 10
+            rotate_y: 10
+        render_options:
+            samples: 100
+            transparent_background: true
+            auto_crop: true
+  - name: Fabrication_Files
+    type: compress
+    options:
+        files:
+            - from_output: PCB_Gerber
+            - from_output: Drill_File
+            - from_output: Position_File
+            - from_output: Boardview
+            - from_output: Netlist
+            - from_output: IBOM
+  - name: 3D_Models
+    type: compress
+    options:
+        files:
+            - from_output: Step_Model
+            - from_output: STL_Model
+            - from_output: Stencil_3D
+            - from_output: 3D_Render
+  - name: Documentation
+    type: compress
+    options:
+        files:
+            - from_output: SchematicPDFs
+            - from_output: PCB_PDFs
+            - from_output: Datasheets
+            - from_output: PCB_Draw

@@ -6,7 +6,7 @@ This repository template is used to create projects with a standardized structur
 
 This list is a guide on how to utilize this template. You can delete files that are not applicable to the given project but the files in brackets are highly recommended.
 
-- Project Source Files
+#### Project Source Files
 - [ ] Add system diagram (hardware/<descriptive Name>.png
 - [ ] Add hardware project files (hardware/)
 	- [ ] If KiCAD based project then include the following
@@ -17,13 +17,13 @@ This list is a guide on how to utilize this template. You can delete files that 
 		- [ ] Gerber Files with drill and position files
 - [ ] Add software source code (software/)
 
-- Images
+#### Images
 - [ ] Update project main image (documents/images/project.png)
 - [ ] Update project logo (documents/images/logo.png)
 - [ ] Update project banner (documents/images/banner.png)
 - [ ] Add gallery images (documents/images/gallery/<descriptive Name>.jpg)
 
-- Documentation
+#### Documentation
 - [ ] Update project description (documents/README.md)
 - [ ] Update hardware README (hardware/README.md)
 - [ ] Update software README (software/README.md)
@@ -31,7 +31,7 @@ This list is a guide on how to utilize this template. You can delete files that 
 - [ ] Optionally add additional latex documents
 - [ ] Replace this readme file with a detailed project overview
 
-- Repo Settings
+#### Repo Settings
 - [ ] Disable wiki, discussions, and projects sections
 - [ ] Add appropriate topic(s)
 - [ ] Add a short description (ie: tagline)
@@ -42,23 +42,9 @@ This list is a guide on how to utilize this template. You can delete files that 
 
 This list highlights current issues and areas for improvement.
 
-- [ ] Create standardized Datasheet Template (LaTex inclues of following)
-	- [ ] Create README template for documentation (description)
-	- [ ] Create Readme template for software
-	- [ ] Create Readme template for hardware
-	- [ ] Create System Diagram Template
-- [ ] Create kicad workflow to automate the following then update above checklist to reflect it
-	- [ ] HTML BOM
-	- [ ] Schematic + PCB plots
-	- [ ] Prezipped gerbers with drill files
-	- [ ] DRC Report
-	- [ ] 3D Render jpg and STL files
-- [ ] Create workflow to automate release creation
-	- [ ] Gerbers in zip format
-	- [ ] Schematic + PCB pdfs
-	- [ ] 3D models (Step + STL)
-	- [ ] Interactive BOM HTML
-	- [ ] Zipped KICAD Archive
-	- [ ] Zipped Code
-	- [ ] Binary and/or built Hex Code
-- [ ] Update root README.md and documents/README.md
+- [ ] Improve KiFinalize and KiBot Automation
+	- [ ] Unify outputs (local + Actions)
+	- [ ] Add Cross System Compatibility
+	- [ ] Support for Spice Simulation
+- [ ] Add additional kicad templates
+- [ ] Add code templates for common mcu/mpu
