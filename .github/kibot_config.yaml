@@ -5,10 +5,12 @@ globals:
     colored_tht_resistors: true # Add color bands to the 3D models of KiCad THT resistors.
     cache_3d_resistors: true # Cache the generated 3D models of colored resistors
     default_resistor_tolerance: 10 # When no tolerance is specified we use +/-10%
-    # dir: ../hardware # Design directory
     out_dir: build # Base output dir, same as command line –out-dir.
     output: '%f-%i%I%v.%x' # Default pattern for output file names.
 preflight:
+    set_text_variables:
+      - name: PROJECTNAME
+        text: '%f'
     check_zone_fills: true
     erc:
         enabled: true
@@ -38,6 +40,9 @@ preflight:
             - thickness
             - dielectric
             - layer_type
+    update_xml:
+        enabled: true
+        as_warning: true
 outputs:
   - name: Datasheets
     type: download_datasheets
@@ -59,8 +64,8 @@ outputs:
     options:
         output: '%f-%i%I%v.%x'
         force_edge_cuts: true
-        #plot_sheet_reference: true
-        #sheet_reference_layout: ...
+        plot_sheet_reference: true
+        sheet_reference_layout: @WORKSHEET@
         pages:
           - layers: 'F.Silkscreen'
           - layers: 'F.Mask'
@@ -90,7 +95,7 @@ outputs:
         dnp_field: 'DNP'
   - name: PCB_Gerber
     type: gerber
-    layers: 'copper,technical,inner,outers'
+    layers: 'all'
     options:
         output: '%f-%i%I%v.%x'
         plot_sheet_reference: true
@@ -99,7 +104,7 @@ outputs:
     options:
         output: '%f-%i%I%v.%x'
         minimal_header: true
-        zeros_format: “SUPPRESS_LEADING”
+        zeros_format: 'SUPPRESS_LEADING'
   - name: Position_File
     type: position
     options:
@@ -123,7 +128,6 @@ outputs:
   - name: 3D_Render
     type: render_3d
     options:
-    layers:
         output: '%f-%i%I%v.%x'
         ray_tracing: true
         transparent_background: true
@@ -145,7 +149,7 @@ outputs:
             rotate_x: 10
             rotate_y: 10
         render_options:
-            samples: 100
+            samples: 10
             transparent_background: true
             auto_crop: true
   - name: Fabrication_Files
