@@ -6,10 +6,11 @@ permissions: write-all
 
 jobs:
     docs:
-        if: false
         name: Compile Latex Documents
         runs-on: ubuntu-latest
         steps:
+          - name: Checkout
+            uses: actions/checkout@v4.2.2
           - name: Compile Latex documents
             uses: xu-cheng/latex-action@v3
             with:
@@ -26,11 +27,27 @@ jobs:
                     dirname=`dirname $fname`
                     filename=`basename $fname`
                     texname=`echo $filename | sed 's/pdf/tex/'`
-                    newname=`head -n 1 $dirname/$texname`
-                    newname="${newname##*=}.pdf"
-                    mv "${dirname}/$filename" "${dirname}/${newname}"
+                    if [ -f '$dirname/$texname' ]; then
+                        newname=`head -n 1 $dirname/$texname`
+                        newname="${newname##*=}.pdf"
+                        if [ $newname != '.pdf' ]; then
+                            mv "${dirname}/$filename" "${dirname}/${newname}"
+                        fi
+                    fi
                 done
+          - name: Import GPG Key
+            uses: crazy-max/ghaction-import-gpg@cb9bde2e2525e640591a934b1fd28eef1dcaf5e5
+            env:
+                secret_passphrase: ${{ secrets.PASSPHRASE }}
+            if: ${{ env.secret_passphrase != '' }}
+            with:
+                gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+                passphrase: ${{ secrets.PASSPHRASE }}
+                trust_level: 5
           - name: Digitally Sign PDF Documents
+            env:
+                secret_passphrase: ${{ secrets.PASSPHRASE }}
+            if: ${{ env.secret_passphrase != '' }}
             run: |
                 find . -type f -iname "*.pdf" | while read fname; do
                     dirname=`dirname $fname`
@@ -39,12 +56,20 @@ jobs:
                     mv "${dirname}/$filename".asc "${dirname}/$filename"
                     gpg --pinentry-mode loopback --passphrase ${{ secrets.PASSPHRASE }} --detach-sig "${dirname}/$filename"
                 done
-          - name: Upload Documentation Artifact
+          - name: Upload Docs Artifact
             uses: actions/upload-artifact@v4.4.3
             with:
-                name: Docs-artifact
-                path: documents/**.pdf
-                
+                name: LATEX_Build-artifact
+                path: |
+                    documents
+                    !documents/**.tex
+                    !documents/**.cls
+                    !documents/**.log
+                    !documents/**.out
+                    !documents/**.aux
+                    !documents/**.fdb_latexmk
+                    !documents/**.fls
+                overwrite: true
     kicad-pre:
         name: Find KiCAD Projects
         runs-on: ubuntu-latest
@@ -60,13 +85,12 @@ jobs:
                 if [ -z "$KiCAD_PROJECTS" ]; then
                     echo "projects=[]" >> "$GITHUB_OUTPUT"
                 else
-                    P_NAMES=$(echo $KiCAD_PROJECTS | sed "s/\(.*\)\.kicad_pro$/\1/")
+                    P_NAMES=$(echo "$KiCAD_PROJECTS" | sed "s/\(.*\)\.kicad_pro$/\1/")
                     KiCAD_PROJECTS_JSON=$(echo "$P_NAMES" | jq -R . | jq -s . | jq -c .)
                     echo "projectJSON=$KiCAD_PROJECTS_JSON" >> "$GITHUB_OUTPUT"
                 fi
-                echo $KiCAD_PROJECTS_JSON
     kicad:
-        name: KiCAD Automation (KiBOT)
+        name: KiCAD Automation
         needs: kicad-pre
         runs-on: ubuntu-latest
         strategy:
@@ -75,34 +99,94 @@ jobs:
         steps:
           - name: Checkout
             uses: actions/checkout@v4.2.2
+          - name: Get Project Name
+            run: |
+                pname=$(basename ${{matrix.project}})
+                echo "PROJECTNAME=$pname" >> $GITHUB_ENV
+          - name: Get Project Worksheet
+            run: |
+                pdir=$(dirname ${{matrix.project}})
+                pwks=${{matrix.project}}.kicad_wks
+                if [ -f "$pwks" ]; then
+                    echo "WORKSHEET=${{matrix.project}}.kicad_wks" >> $GITHUB_ENV
+                    echo "true"
+                else
+                    echo "WORKSHEET=${pdir}/standard.kicad_wks" >> $GITHUB_ENV
+                    echo "false"
+                fi
           - name: Run KiBOT
             uses: INTI-CMNB/KiBot@v2_k8
             with:
                 config: .github/kibot_config.yaml
                 schema: ${{matrix.project}}.kicad_sch
                 board:  ${{matrix.project}}.kicad_pcb
-                dir: build
-                additional_args: "-v -E WORKSHEET=${{matrix.project}}.kicad_wks"
-          - name: Upload Project Artifact
+                dir: build/hardware/${{ env.PROJECTNAME }}
+                additional_args: "-E WORKSHEET=${{ env.WORKSHEET }}"
+          - name: Upload KiCAD Project Artifact
             if: ${{ always() }}
             uses: actions/upload-artifact@v4.4.3
             with:
                 name: KiCAD_Build_${{strategy.job-index}}-artifact
                 path: build
                 overwrite: true
+    code-pre:
+        name: Find Code Projects
+        runs-on: ubuntu-latest
+        outputs:
+            projects: ${{ steps.find_Project.outputs.codeJSON }}
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4.2.2
+          - name: Find Code Projects
+            id: find_Project
+            run: |
+                CODE_FOLDERS=$(find ./firmware -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
+                P_NAMES=$(echo "$CODE_FOLDERS" | sed "s/\(.*\)\.kicad_pro$/\1/")
+                CODE_FOLDERS_JSON=$(echo "$CODE_FOLDERS" | jq -R . | jq -s . | jq -c .)
+                echo "codeJSON=$CODE_FOLDERS_JSON" >> "$GITHUB_OUTPUT"
+    code:
+        name: Compile Code
+        needs: code-pre
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                project: ${{ fromJSON(needs.code-pre.outputs.projects) }}
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4.2.2
+          # - name: Build Binary (MPLABX-XC16)
+            # uses: velocitek/ghactions-mplabx@master
+            # with:
+              # project: firmware.X
+              # configuration: default
+          - name: Upload Code Artifact
+            if: ${{ always() }}
+            uses: actions/upload-artifact@v4.4.3
+            with:
+                name: Code_Build_${{strategy.job-index}}-artifact
+                path: |
+                    build
+                overwrite: true
     release:
-        if: false
         name: Create Release
         runs-on: ubuntu-latest
-        needs: [docs,kicad]
+        needs: [docs,kicad,code]
         steps:
-          - name: Zip the Code Directory
+          - name: Download Artifacts
+            uses: actions/download-artifact@v4.1.8
+            with:
+                merge-multiple: true
+          - name: Restructure and Zip Files
             run: |
-                if [ "$(ls -A /path/to/directory)" ]; then
-                    zip -r Code.zip software
+                if [ "$(ls -A hardware)" ]; then
+                    zip -r Hardware.zip hardware
+                fi
+                if [ "$(ls -A firmware)" ]; then
+                    zip -r Firmware.zip firmware
                 fi
           - name: Delete Previous Release
-            run: gh release delete latest --cleanup-tag
+            run: gh release delete latest --cleanup-tag --repo ${{ github.repository }}
+            continue-on-error: true
             env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           - name: Create Latest Release (always)
@@ -110,8 +194,9 @@ jobs:
             with:
                 files: |
                     **/*.zip
-                    **/*.pdf
-                name: Latest
+                    *.pdf
+                    hardware/**/*bom.html
+                name: latest
                 tag_name: latest
                 make_latest: true
                 body: Project Documents
@@ -121,7 +206,8 @@ jobs:
             with:
                 files: |
                     **/*.zip
-                    **/*.pdf
+                    *.pdf
+                    hardware/**/*bom.html
                 generate_release_notes: true
                 make_latest: true
                 body: Project Documents

@@ -6,9 +6,6 @@ globals:
     cache_3d_resistors: true # Cache the generated 3D models of colored resistors
     default_resistor_tolerance: 10 # When no tolerance is specified we use +/-10%
     date_time_format: '%Y-%m-%d'
-    #out_dir: 'build' # Base output dir, same as command line –out-dir.
-    #output: '%f-%i%I%v.%x' # Default pattern for output file names.
-    #dir: '.'
 preflight:
     set_text_variables:
       - name: PROJECTNAME
@@ -16,11 +13,11 @@ preflight:
     check_zone_fills: true
     erc:
         enabled: true
-        dir: 'build_reports'
+        dir: 'docs/build_reports'
         dont_stop: true
     drc:
         enabled: true
-        dir: 'build_reports'
+        dir: 'docs/build_reports'
         all_track_errors: true
         dont_stop: true
     check_fields:
@@ -51,19 +48,22 @@ preflight:
 outputs:
   - name: Datasheets
     type: download_datasheets
-    dir: '+datasheets'
+    dir: '+docs/datasheets'
     options:
         output: '${VALUE}.pdf'
         dnf: true
   - name: SchematicPDFs
     type: pdf_sch_print
+    dir: '+docs'
     options:
         color_theme: "KiCAD Default"
         monochrome: true
   - name: Boardview
     type: boardview
+    dir: '+gerbers'
   - name: PCB_PDFs
     type: pcb_print
+    dir: '+docs'
     options:
         force_edge_cuts: true
         plot_sheet_reference: true
@@ -87,10 +87,12 @@ outputs:
             layer_var: 'All'
   - name: Netlist
     type: netlist
+    dir: '+gerbers'
     options:
         format: 'classic'
   - name: IBOM
     type: ibom
+    dir: '+docs'
     options:
         output: '%f-bom.%x'
         show_fields: 'Value,Footprint,Source,Critical,DNP'
@@ -102,85 +104,62 @@ outputs:
         dnp_field: 'DNP'
   - name: PCB_Gerber
     type: gerber
+    dir: '+gerbers'
     layers: 'all'
     options:
         plot_sheet_reference: true
   - name: Drill_File
     type: excellon
+    dir: '+gerbers'
     options:
         minimal_header: true
         zeros_format: 'SUPPRESS_LEADING'
   - name: Position_File
     type: position
+    dir: '+gerbers'
   - name: Step_Model
     type: step
+    dir: '+3d_models'
   - name: Stencil_3D
     type: stencil_3d
+    dir: '+3d_models'
     options:
-        output: '%f-%i%I%v.%x'
         thickness: 0.15 # [mm]
         create_preview: true
   - name: PCB_Draw
     type: pcbdraw
-    dir: '+images'
+    dir: '+docs/images'
     options:
         output: '%f-pcb-%i%I%v.%x'
         format: 'png'
         show_components: 'none'
-  # - name: 3D_Render
-    # type: render_3d
-    # options:
-        # output: '%f-%i%I%v.%x'
-        # ray_tracing: true
-        # transparent_background: true
-        # force_stackup_colors: true
-        # auto_crop: true
-  # - name: STL_Model
-    # type: blender_export
-    # options:
-        # outputs:
-          # - output: '%f-%i%I%v.%x'
-            # type: stl
-          # - output: '%f-%i%I%v.%x'
-            # type: render
-        # point_of_view:
-          # - view: 'top'
-            # rotate_x: 10
-            # rotate_y: 10
-          # - view: 'bottom'
-            # rotate_x: 10
-            # rotate_y: 10
-        # render_options:
-            # samples: 10
-            # transparent_background: true
-            # auto_crop: true
-  - name: gerbers
-    type: compress
+  - name: STL_Model
+    type: blender_export
+    dir: '+3d_models'
     options:
-        move_files: true
-        files:
-            - from_output: PCB_Gerber
-            - from_output: Drill_File
-            - from_output: Position_File
-            - from_output: Boardview
-            - from_output: Netlist
-  - name: 3d_models
-    type: compress
+        outputs:
+            type: stl
+  - name: 3D Renders
+    type: blender_export
+    dir: '+docs/images'
     options:
-        move_files: true
-        files:
-            - from_output: Step_Model
-            # - from_output: STL_Model
-            # - from_output: 3D_Render
-            # - from_output: Stencil_3D
-  - name: docs
-    type: compress
-    options:
-        move_files: true
-        files:
-            - from_output: SchematicPDFs
-            - from_output: PCB_PDFs
-            - from_output: Datasheets
-            - from_output: PCB_Draw
-            - from_output: IBOM
-            - source: 'build_reports'
+        point_of_view:
+          - view: 'top'
+            rotate_x: 20
+            rotate_y: 20
+          - view: 'bottom'
+            rotate_x: 20
+            rotate_y: 20
+          - view: 'front'
+            rotate_x: 0
+            rotate_y: 20
+          - view: 'left'
+            rotate_x: 0
+            rotate_y: 20
+          - view: 'right'
+            rotate_x: 0
+            rotate_y: 20
+        render_options:
+            samples: 10
+            transparent_background: true
+            auto_crop: true

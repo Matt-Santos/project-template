@@ -7,15 +7,10 @@ This repository template is used to create projects with a standardized structur
 This list is a guide on how to utilize this template. You can delete files that are not applicable to the given project but the files in brackets are highly recommended.
 
 #### Project Source Files
-- [ ] Add system diagram (hardware/<descriptive Name>.png
-- [ ] Add hardware project files (hardware/)
-	- [ ] If KiCAD based project then include the following
-		- [ ] HTML BOM
-		- [ ] Schematic + PCB plots
-		- [ ] 3D Render jpg and STL files
-		- [ ] DRC Report + ERC Report + Netlist
-		- [ ] Gerber Files with drill and position files
+- [ ] Add hardware files (hardware/)
+	- [ ] Place KiCAD projects in independant subfolders
 - [ ] Add software source code (software/)
+	- [ ] Place Code projects in independant subfolders
 
 #### Images
 - [ ] Update project main image (documents/images/project.png)
@@ -28,13 +23,14 @@ This list is a guide on how to utilize this template. You can delete files that 
 - [ ] Update hardware README (hardware/README.md)
 - [ ] Update software README (software/README.md)
 - [ ] Check LaTeX datasheet and modify if needed (documents/Datasheet.tex)
-- [ ] Optionally add additional latex documents
-- [ ] Replace this readme file with a detailed project overview
+- [ ] Add additional latex documents as needed (documents/)
+- [ ] Replace this readme file with a project specific overview
 
 #### Repo Settings
 - [ ] Disable wiki, discussions, and projects sections
 - [ ] Add appropriate topic(s)
 - [ ] Add a short description (ie: tagline)
+- [ ] Add Actions Secerts for signing documents
 - [ ] Add homepage link to project page [Matt-Santos.github.io](https://github.com/Matt-Santos/Matt-Santos.github.io)
 - [ ] Rerun workflow on [Matt-Santos.github.io](https://github.com/Matt-Santos/Matt-Santos.github.io) and [LaTex-Workshop](https://github.com/Matt-Santos/LaTeX-Workshop)
 
@@ -42,9 +38,12 @@ This list is a guide on how to utilize this template. You can delete files that 
 
 This list highlights current issues and areas for improvement.
 
-- [ ] Improve KiFinalize and KiBot Automation
-	- [ ] Unify outputs (local + Actions)
-	- [ ] Add Cross System Compatibility
+- [ ] Improve/Update KiFinalize.cmd
+	- [ ] Cross System Compatibility (linux, windows)
 	- [ ] Support for Spice Simulation
-- [ ] Add additional kicad templates
+- [ ] Improve Actions Workflow Automation
+	- [ ] Improve upon KiCAD build outputs
+	- [ ] Add Support for Spice Simulation
+	- [ ] Implement auto code detection + build
+- [ ] Add additional kicad templates to choose from
 - [ ] Add code templates for common mcu/mpu
