@@ -193,9 +193,10 @@ jobs:
             uses: softprops/action-gh-release@v2.0.9
             with:
                 files: |
-                    **/*.zip
+                    *.zip
                     *.pdf
-                    hardware/**/*bom.html
+                    hardware/**/docs/*bom.html
+                    hardware/**/docs/*.pdf
                 name: latest
                 tag_name: latest
                 make_latest: true
@@ -205,9 +206,10 @@ jobs:
             uses: softprops/action-gh-release@v2.0.9
             with:
                 files: |
-                    **/*.zip
+                    *.zip
                     *.pdf
-                    hardware/**/*bom.html
+                    hardware/**/docs/*bom.html
+                    hardware/**/docs/*.pdf
                 generate_release_notes: true
                 make_latest: true
                 body: Project Documents

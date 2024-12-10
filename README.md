@@ -6,11 +6,12 @@ This repository template is used to create projects with a standardized structur
 
 This list is a guide on how to utilize this template. You can delete files that are not applicable to the given project but the files in brackets are highly recommended.
 
-#### Project Source Files
-- [ ] Add hardware files (hardware/)
-	- [ ] Place KiCAD projects in independant subfolders
-- [ ] Add software source code (software/)
-	- [ ] Place Code projects in independant subfolders
+#### Project Files
+-  Add hardware files (hardware/)
+	- [ ] Place KiCAD projects into independant subfolders
+	- [ ] Place any pdf,stl,png,html files for display on website
+-  Add software source code (software/)
+	- [ ] Place Code projects into independant subfolders
 
 #### Images
 - [ ] Update project main image (documents/images/project.png)
@@ -20,8 +21,8 @@ This list is a guide on how to utilize this template. You can delete files that 
 
 #### Documentation
 - [ ] Update project description (documents/README.md)
-- [ ] Update hardware README (hardware/README.md)
-- [ ] Update software README (software/README.md)
+- [ ] Update/delete hardware README (hardware/README.md)
+- [ ] Update/delete firmware README (firmware/README.md)
 - [ ] Check LaTeX datasheet and modify if needed (documents/Datasheet.tex)
 - [ ] Add additional latex documents as needed (documents/)
 - [ ] Replace this readme file with a project specific overview
@@ -38,12 +39,14 @@ This list is a guide on how to utilize this template. You can delete files that 
 
 This list highlights current issues and areas for improvement.
 
-- [ ] Improve/Update KiFinalize.cmd
-	- [ ] Cross System Compatibility (linux, windows)
-	- [ ] Support for Spice Simulation
-- [ ] Improve Actions Workflow Automation
-	- [ ] Improve upon KiCAD build outputs
-	- [ ] Add Support for Spice Simulation
-	- [ ] Implement auto code detection + build
-- [ ] Add additional kicad templates to choose from
-- [ ] Add code templates for common mcu/mpu
+- Improve/Update local workflow (KiFinalize.cmd)
+	- Cross System Compatibility (linux, windows)
+	- Support for Spice Simulation
+- Improve Actions Workflow (build.yml)
+	- Improve upon KiCAD build outputs
+	- Add Support for Spice Simulation
+	- Implement auto code detection + build
+- Add additional kicad templates
+- Add code templates for common mcu/mpu
+- Create Readme template for firmware folder
+- Create Readme template for hardware folder
