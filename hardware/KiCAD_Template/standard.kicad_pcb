@@ -149,17 +149,6 @@
 	)
 	(net 0 "")
 	(gr_rect
-		(start 66.04 57.15)
-		(end 68.58 59.69)
-		(stroke
-			(width 0.1)
-			(type default)
-		)
-		(fill solid)
-		(layer "F.Paste")
-		(uuid "0538b823-aab1-4c62-8fca-ae17b0363f00")
-	)
-	(gr_rect
 		(start 8.89 158.75)
 		(end 95.25 207.01)
 		(locked yes)

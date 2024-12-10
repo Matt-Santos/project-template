@@ -28,25 +28,9 @@ This list is a guide on how to utilize this template. You can delete files that 
 - [ ] Replace this readme file with a project specific overview
 
 #### Repo Settings
-- [ ] Disable wiki, discussions, and projects sections
+- [ ] Disable wiki and discussions sections
 - [ ] Add appropriate topic(s)
 - [ ] Add a short description (ie: tagline)
-- [ ] Add Actions Secerts for signing documents
+- [ ] Add Actions Secerts for signing documents (optional)
 - [ ] Add homepage link to project page [Matt-Santos.github.io](https://github.com/Matt-Santos/Matt-Santos.github.io)
 - [ ] Rerun workflow on [Matt-Santos.github.io](https://github.com/Matt-Santos/Matt-Santos.github.io) and [LaTex-Workshop](https://github.com/Matt-Santos/LaTeX-Workshop)
-
-## Future Improvements
-
-This list highlights current issues and areas for improvement.
-
-- Improve/Update local workflow (KiFinalize.cmd)
-	- Cross System Compatibility (linux, windows)
-	- Support for Spice Simulation
-- Improve Actions Workflow (build.yml)
-	- Improve upon KiCAD build outputs
-	- Add Support for Spice Simulation
-	- Implement auto code detection + build
-- Add additional kicad templates
-- Add code templates for common mcu/mpu
-- Create Readme template for firmware folder
-- Create Readme template for hardware folder
