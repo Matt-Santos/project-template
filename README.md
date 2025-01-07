@@ -24,6 +24,7 @@ This list is a guide on how to utilize this template. You can delete files that 
 - [ ] Update/delete hardware README (hardware/README.md)
 - [ ] Update/delete firmware README (firmware/README.md)
 - [ ] Check LaTeX datasheet and modify if needed (documents/Datasheet.tex)
+	- [Reference](https://ez.analog.com/cfs-filesystemfile/__key/communityserver-components-sitefiles/ADI-Unified-Format-MAX22563-annotated.pdf?_=637959140063108953)
 - [ ] Add additional latex documents as needed (documents/)
 - [ ] Replace this readme file with a project specific overview
 
